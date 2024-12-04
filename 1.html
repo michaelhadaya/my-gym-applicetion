@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מערכת מכונות חדר כושר</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: pink;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .machine {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+
+        .available {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .unavailable {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .people-count {
+            font-weight: bold;
+        }
+
+        .total-people-top {
+            margin-top: 15px;
+            font-size: 1.2em;
+            text-align: center;
+            color: #333;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>מצב מכונות חדר כושר</h1>
+        <div id="totalPeopleTop" class="total-people-top">סך הכל אנשים בחדר הכושר: 0</div>
+        <div id="machines"></div>
+        <button id="checkAvailability">בדוק זמינות</button>
+    </div>
+    <script>
+        const machines = [
+            { name: "מכונת ריצה", count: 10 },
+            { name: "מכונת משקולות", count: 6 },
+            { name: "מכונת אופניים", count: 6 },
+            { name: "מכונת פרפר", count: 3 },
+            { name: "מכונת משיכת גב", count: 3 },
+            { name: "מתח", count: 4 },
+            { name: "בנץ", count: 3},
+            { name: "דחיקת רגליים", count: 4},
+            { name: "מכונת מדרגות", count: 3},
+            { name: "מכונת כבלים", count: 2},
+            { name: "מכונת כתפיים", count: 2},
+            { name: "דדליפט", count: 4},
+            { name: "פשיטת מרפקים", count: 3},
+            { name: "מכונת כפיפות בטן", count: 4},
+            { name: "חתירה בישיבה", count: 3},
+            { name: "לחיצת כתפיים", count: 3}
+        ];
+
+        function randomAvailability() {
+            return machines.map(machine => ({
+                ...machine,
+                peopleCount: Math.floor(Math.random() * (machine.count + 1)) // כמות אנשים בין 0 למספר המכונות
+            }));
+        }
+
+        function displayMachines() { 
+            const updatedMachines = randomAvailability();
+            const machinesDiv = document.getElementById('machines');
+            const totalPeopleDivTop = document.getElementById('totalPeopleTop');
+            machinesDiv.innerHTML = '';
+
+            let totalPeople = 0;
+
+            updatedMachines.forEach(machine => {
+                const machineDiv = document.createElement('div');
+                machineDiv.classList.add('machine');
+
+                totalPeople += machine.peopleCount;
+
+                // קובע אם המכונה פנויה או לא
+                const isAvailable = machine.peopleCount < machine.count;
+                machineDiv.classList.add(isAvailable ? 'available' : 'unavailable');
+
+                machineDiv.innerHTML = `
+                    ${machine.name} (${machine.count} מכונות) - ${isAvailable ? 'פנויה' : 'לא פנויה'}<br>
+                    <span class="people-count">אנשים: ${machine.peopleCount}</span>
+                `;
+                
+                machinesDiv.appendChild(machineDiv);
+            });
+
+            totalPeopleDivTop.textContent = `סך הכל אנשים בחדר הכושר: ${totalPeople}`;
+        }
+
+        document.getElementById('checkAvailability').addEventListener('click', displayMachines);
+    </script>
+</body>
+</html>
